@@ -1,7 +1,6 @@
 import argparse
 import pytest
 import json
-from rich import print  # For pretty printing. TO REMOVE BEFORE SUBMITTING
 
 def update(string: str, dictionary: dict):
     if string in dictionary:
@@ -36,14 +35,12 @@ def construct(file_str: str) -> dict[str, dict[str, float]]:
     words = file_str.lower().split()
 
     res = {"*": {}}
-    for word in words:
-        insert(word, res)
+    [insert(word, res) for word in words]
 
-    # print(res)
     for key in res:
         s = sum(res[key].values())
         res[key] = {k:round(v/s, 2) for k,v in res[key].items()}
-    # print(res)
+
     return res
 
 
