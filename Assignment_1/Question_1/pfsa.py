@@ -1,21 +1,50 @@
 import argparse
 import pytest
 import json
+from rich import print  # For pretty printing. TO REMOVE BEFORE SUBMITTING
+
+def update(string: str, dictionary: dict):
+    if string in dictionary:
+        dictionary[string] += 1
+    else:
+        dictionary.update({string: 1})
+
+def insert(word: str, res: dict[str, dict[str, int]]) -> None:
+    if len(word) == 0:
+        return
+
+    update(word[0], res["*"])
+
+    prev = word[0]
+    cur = prev
+    for letter in word[1:]:
+        cur += letter
+        if prev in res:
+            update(cur, res[prev])
+        else:
+            res.update({prev: {cur: 1}})
+        prev = cur
+
+    if prev in res:
+        update(prev + "*", res[prev])
+    else:
+        res.update({prev: {prev + "*": 1}})
 
 
 def construct(file_str: str) -> dict[str, dict[str, float]]:
-    """Takes in the string representing the file and returns pfsa
+    """Takes in the string representing the file and returns pfsa"""
+    words = file_str.lower().split()
 
-    The given example is for the statement "A cat"
-    """
-    # TODO: FILE IN THIS FUNCTION
-    return {
-        "*": {"a": 0.5, "c": 0.5},
-        "a": {"a*": 1.0},
-        "c": {"ca": 1.0},
-        "ca": {"cat": 1.0},
-        "cat": {"cat*": 1.0},
-    }
+    res = {"*": {}}
+    for word in words:
+        insert(word, res)
+
+    # print(res)
+    for key in res:
+        s = sum(res[key].values())
+        res[key] = {k:round(v/s, 2) for k,v in res[key].items()}
+    # print(res)
+    return res
 
 
 def main():
