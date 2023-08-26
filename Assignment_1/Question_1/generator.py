@@ -1,16 +1,24 @@
 import argparse
 import pytest
 import json
+from random import random
+
+
+def generate_word(
+    pfsa: dict[str, dict[str, float]], pfsa_piece: dict[str, float]
+) -> str:
+    """Takes in the PFSA and generates a single word"""
+    p = random()
+    cur_sum = 0
+    for k, v in pfsa_piece.items():
+        if p < cur_sum + v:
+            return k[:-1] if "*" in k else generate_word(pfsa, pfsa[k])
+        cur_sum += v
 
 
 def generate(pfsa: dict[str, dict[str, float]], word_count: int) -> str:
-    """Takes in the PFSA and generates a string of `word_count` number of words
-
-    The following string is when the input has only "Cat" as in it's PFSA with
-    count of 4.
-    """
-    # TODO: FILE IN THIS FUNCTION
-    return "cat cat cat cat"
+    """Takes in the PFSA and generates a string of `word_count` number of words"""
+    return " ".join(generate_word(pfsa, pfsa["*"]) for _ in range(word_count))
 
 
 def main():

@@ -1,1 +1,0 @@
-{"*": {"a": 1.0}, "a": {"au": 1.0}, "au": {"aut": 1.0}, "aut": {"auto": 1.0}, "auto": {"auto*": 0.33, "autom": 0.67}, "autom": {"automa": 1.0}, "automa": {"automat": 1.0}, "automat": {"automata": 0.5, "automate": 0.5}, "automata": {"automata*": 1.0}, "automate": {"automate*": 1.0}}
