@@ -112,7 +112,11 @@ def tokenize(source_code: str):
 
 def valid_x(tokens: list[Token]) -> bool:
     if len(tokens) == 1:
-        return tokens[0][0] in (TokenType.FLOAT, TokenType.INTEGER, TokenType.IDENTIFIER)
+        return tokens[0][0] in (
+            TokenType.FLOAT,
+            TokenType.INTEGER,
+            TokenType.IDENTIFIER,
+        )
     else:
         return valid_cond(tokens)
 
@@ -138,23 +142,19 @@ def valid_A(tokens: list[Token]) -> bool:
 
     if i_max == -1:
         return False
-    
+
     j = i_max + 1
     j_max = -1
     while j < n:
         if valid_statement(tokens[i_max:j]):
             j_max = j
         j += 1
-    if j_max == -1:
-        return False
-    elif j_max == n - 1:
+    if j_max == n - 1:
         return True
-    
-    if j_max >= n or tokens[j_max] != (TokenType.KEYWORD, "else"):
+    elif j_max == -1 or j_max >= n or tokens[j_max] != (TokenType.KEYWORD, "else"):
         return False
-  
-    return valid_statement(tokens[j_max+1:])
-        
+
+    return valid_statement(tokens[j_max + 1 :])
 
 
 def valid_statement(tokens: list[Token]) -> bool:
@@ -163,7 +163,7 @@ def valid_statement(tokens: list[Token]) -> bool:
     elif tokens[0] == (TokenType.KEYWORD, "if"):
         return valid_A(tokens[1:])
     elif len(tokens) == 1:
-        return tokens[0] not in  ((TokenType.KEYWORD, "if"), (TokenType.KEYWORD, "else"))
+        return tokens[0] not in ((TokenType.KEYWORD, "if"), (TokenType.KEYWORD, "else"))
     else:
         for i in range(len(tokens)):
             if valid_statement(tokens[:i]) and valid_statement(tokens[i:]):
@@ -185,3 +185,4 @@ if __name__ == "__main__":
     #     print(f"Token Type: {token[0]}, Token Value: {token[1]}")
 
     logs = checkGrammar(tokens)
+    print(logs)
