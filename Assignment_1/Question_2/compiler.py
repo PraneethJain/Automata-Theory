@@ -1,6 +1,3 @@
-from rich import print
-
-
 class TokenType:
     IDENTIFIER = "IDENTIFIER"
     KEYWORD = "KEYWORD"
@@ -128,14 +125,14 @@ def valid_cond(tokens: list[Token]) -> bool:
                 tokens[tokens.index((TokenType.SYMBOL, op)) + 1 :]
             )
     else:
-        return len(tokens) == 1 and tokens[0][0] in (TokenType.FLOAT, TokenType.INTEGER)
+        return len(tokens) == 1 and tokens[0][0] in (TokenType.FLOAT, TokenType.INTEGER, TokenType.IDENTIFIER)
 
 
 def valid_A(tokens: list[Token]) -> bool:
     i = 0
     n = len(tokens)
     i_max = -1
-    while i < n:
+    while i <= n:
         if valid_cond(tokens[:i]):
             i_max = i
         i += 1
@@ -145,11 +142,11 @@ def valid_A(tokens: list[Token]) -> bool:
 
     j = i_max + 1
     j_max = -1
-    while j < n:
+    while j <= n:
         if valid_statement(tokens[i_max:j]):
             j_max = j
         j += 1
-    if j_max == n - 1:
+    if j_max == n:
         return True
     elif j_max == -1 or j_max >= n or tokens[j_max] != (TokenType.KEYWORD, "else"):
         return False
@@ -178,7 +175,7 @@ def checkGrammar(tokens: list[Token]) -> bool:
 
 # Test the tokenizer
 if __name__ == "__main__":
-    source_code = "if 2+xi > 0 print 2.0 else print -1;"
+    source_code = "if 1 if 2 3"
     tokens = tokenize(source_code)
 
     # for token in tokens:
