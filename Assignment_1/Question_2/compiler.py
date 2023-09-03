@@ -12,7 +12,6 @@ operators = {"+", "-", "*", "/", "^", "<", ">", "="}
 token_hierarchy = {
     "if": TokenType.KEYWORD,
     "else": TokenType.KEYWORD,
-    "print": TokenType.KEYWORD,
 }
 
 
@@ -175,7 +174,7 @@ def checkGrammar(tokens: list[Token]) -> bool:
 
 # Test the tokenizer
 if __name__ == "__main__":
-    source_code = "if 1 if 2 3"
+    source_code = "if 2+xi > 0 print 2.0 else print -1;"
     tokens = tokenize(source_code)
 
     # for token in tokens:
