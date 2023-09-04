@@ -181,21 +181,22 @@ def better_tokenize(source_code: str) -> list[Token]:
     can_fix = True
     while can_fix:
         for i in range(len(tokens) - 1):
-            if tokens[i][1] == "-":
-                if i == 0 or tokens[i - 1][0] == TokenType.KEYWORD:
-                    tokens = (
-                        tokens[:i]
-                        + [(tokens[i + 1][0], tokens[i][1] + tokens[i + 1][1])]
-                        + tokens[i + 2 :]
-                    )
-                    break
+            if tokens[i][1] in {"-", "+"} and (
+                i == 0 or tokens[i - 1][0] in {TokenType.KEYWORD}
+            ):
+                tokens = (
+                    tokens[:i]
+                    + [(tokens[i + 1][0], tokens[i][1] + tokens[i + 1][1])]
+                    + tokens[i + 2 :]
+                )
+                break
         else:
             can_fix = False
     return tokens
 
 
 if __name__ == "__main__":
-    source_code = "if 2+print print 5"
+    source_code = "if 1 ++ 2 > 0 then"
     tokens = better_tokenize(source_code)
 
     # for token in tokens:
@@ -230,6 +231,9 @@ testcases = {
     "if + print": False,
     "if 2+print print 5": True,
     "print if print print else x < y": False,
+    "1 + 2": False,
+    "if 1 + 2 > 0 then": True,
+    "if 1 ++ 2 > 0 then": False,
 }
 
 
