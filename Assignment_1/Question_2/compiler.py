@@ -110,67 +110,67 @@ def tokenize(source_code: str):
     return tokens
 
 
-def valid_y(token: Token) -> bool:
+def valid_y(token: Token, to_print: bool = True) -> bool:
     if token[1] in operators.union({"if", "else"}):
-        print("Rule 1 violated. Found y as operator/if/else!")
+        to_print and print(f"Rule 3 violated. Found y as {token[1]}")
         return False
     return True
 
 
-def valid_x(tokens: list[Token]) -> bool:
+def valid_x(tokens: list[Token], to_print: bool = True) -> bool:
     if len(tokens) == 1:
-        return valid_y(tokens[0])
+        return valid_y(tokens[0], to_print)
     else:
-        return valid_cond(tokens)
+        return valid_cond(tokens, to_print)
 
 
-def valid_cond(tokens: list[Token]) -> bool:
+def valid_cond(tokens: list[Token], to_print: bool = True) -> bool:
     for op in operators:
         if (TokenType.SYMBOL, op) in tokens:
             idx = tokens.index((TokenType.SYMBOL, op))
-            return valid_x(tokens[:idx]) and valid_x(tokens[idx + 1 :])
+            return valid_x(tokens[:idx], to_print) and valid_x(tokens[idx + 1 :], to_print)
     else:
         if len(tokens) != 1:
-            print("Rule 3 violated. Found y with multiple tokens!")
+            to_print and print("Rule 3 violated. Found y with multiple tokens!")
             return False
 
-        return valid_y(tokens[0])
+        return valid_y(tokens[0], to_print)
 
 
-def valid_A(tokens: list[Token]) -> bool:
+def valid_A(tokens: list[Token], to_print: bool = True) -> bool:
     n = len(tokens)
     for i in range(n, 0, -1):
-        if valid_cond(tokens[:i]):
+        if valid_cond(tokens[:i], False):
             j = i + 1
             for j in range(n, 0, -1):
-                if valid_statement(tokens[i:j]):
+                if valid_statement(tokens[i:j], False):
                     if j == n:
                         return True
 
                     if tokens[j][1] != "else":
-                        print(f"Rule 4 violated. Expected 'else', found {tokens[j][1]}")
+                        to_print and print(f"Rule 4 violated. Expected 'else', found {tokens[j][1]}")
                         return False
-                    return valid_statement(tokens[j + 1 :])
-            print("Rule 4 violated. Invalid statement after condition")
+                    return valid_statement(tokens[j + 1 :], to_print)
+            to_print and print("Rule 4 violated. Invalid statement after condition")
             return False
-    print("Rule 2 violated. Invalid A after if")
+    to_print and print("Rule 2 violated. Invalid A after if")
     return False
 
 
-def valid_statement(tokens: list[Token]) -> bool:
+def valid_statement(tokens: list[Token], to_print: bool = True) -> bool:
     if len(tokens) == 0:
-        print("Rule 2 violated. Found empty statement!")
+        to_print and print("Rule 2 violated. Found empty statement!")
         return False
     elif tokens[0] == (TokenType.KEYWORD, "if"):
-        return valid_A(tokens[1:])
+        return valid_A(tokens[1:], to_print)
     elif len(tokens) == 1:
-        return valid_y(tokens[0])
+        return valid_y(tokens[0], to_print)
     else:
-        return valid_statement(tokens[:1]) and valid_statement(tokens[1:])
+        return valid_statement(tokens[:1], to_print) and valid_statement(tokens[1:], to_print)
 
 
-def checkGrammar(tokens: list[Token]) -> bool:
-    return valid_statement(tokens)
+def checkGrammar(tokens: list[Token], to_print: bool = True) -> bool:
+    return valid_statement(tokens, to_print)
 
 
 def better_tokenize(source_code: str) -> list[Token]:
@@ -193,14 +193,14 @@ def better_tokenize(source_code: str) -> list[Token]:
 
 
 if __name__ == "__main__":
-    source_code = "if a if b else if c d"
+    source_code = "if 1 + 2 > 0 then"
     tokens = better_tokenize(source_code)
 
-    result = checkGrammar(tokens)
+    valid = checkGrammar(tokens)
 
-    # if result:
-    #     for token in tokens:
-    #         print(f"Token Type: {token[0]}, Token Value: {token[1]}")
+    if valid:
+        for token in tokens:
+            print(f"Token Type: {token[0]}, Token Value: {token[1]}")
 
 
 testcases = {
