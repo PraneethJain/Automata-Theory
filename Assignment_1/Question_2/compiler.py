@@ -1,3 +1,6 @@
+import pytest
+
+
 class TokenType:
     IDENTIFIER = "IDENTIFIER"
     KEYWORD = "KEYWORD"
@@ -124,7 +127,11 @@ def valid_cond(tokens: list[Token]) -> bool:
                 tokens[tokens.index((TokenType.SYMBOL, op)) + 1 :]
             )
     else:
-        return len(tokens) == 1 and tokens[0][0] in (TokenType.FLOAT, TokenType.INTEGER, TokenType.IDENTIFIER)
+        return len(tokens) == 1 and tokens[0][0] in (
+            TokenType.FLOAT,
+            TokenType.INTEGER,
+            TokenType.IDENTIFIER,
+        )
 
 
 def valid_A(tokens: list[Token]) -> bool:
@@ -174,11 +181,29 @@ def checkGrammar(tokens: list[Token]) -> bool:
 
 # Test the tokenizer
 if __name__ == "__main__":
-    source_code = "if 2+xi > 0 print 2.0 else print -1;"
+    source_code = "if"
     tokens = tokenize(source_code)
 
     # for token in tokens:
     #     print(f"Token Type: {token[0]}, Token Value: {token[1]}")
 
-    logs = checkGrammar(tokens)
-    print(logs)
+    result = checkGrammar(tokens)
+    print(result)
+
+
+testcases = {
+    "if": False,
+    "else": False,
+    "if a b": True,
+    "if a if b if c": False,
+    "if a if b if c d": True,
+    "if a if b else if c d": False,
+    "if a if b print else if c d": True,
+    "if 2 + xi > 0 print 2.0 else print -1;": True,
+}
+
+
+@pytest.mark.parametrize("string, result", [tuple(x) for x in testcases.items()])
+def test_output_match(string: str, result: bool) -> None:
+    tokens = tokenize(string)
+    assert checkGrammar(tokens) == result
