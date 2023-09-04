@@ -111,7 +111,10 @@ def tokenize(source_code: str):
 
 
 def valid_y(token: Token) -> bool:
-    return token[1] not in operators.union({"if", "else"})
+    if token[1] in operators.union({"if", "else"}):
+        print("Rule 1 violated. Found y as operator/if/else!")
+        return False
+    return True
 
 
 def valid_x(tokens: list[Token]) -> bool:
@@ -127,7 +130,11 @@ def valid_cond(tokens: list[Token]) -> bool:
             idx = tokens.index((TokenType.SYMBOL, op))
             return valid_x(tokens[:idx]) and valid_x(tokens[idx + 1 :])
     else:
-        return len(tokens) == 1 and valid_y(tokens[0])
+        if len(tokens) != 1:
+            print("Rule 3 violated. Found y with multiple tokens!")
+            return False
+
+        return valid_y(tokens[0])
 
 
 def valid_A(tokens: list[Token]) -> bool:
@@ -137,21 +144,27 @@ def valid_A(tokens: list[Token]) -> bool:
             j = i + 1
             for j in range(n, 0, -1):
                 if valid_statement(tokens[i:j]):
-                    return j == n or (
-                        tokens[j][1] == "else" and valid_statement(tokens[j + 1 :])
-                    )
+                    if j == n:
+                        return True
+
+                    if tokens[j][1] != "else":
+                        print(f"Rule 4 violated. Expected 'else', found {tokens[j][1]}")
+                        return False
+                    return valid_statement(tokens[j + 1 :])
+            print("Rule 4 violated. Invalid statement after condition")
             return False
-    else:
-        return False
+    print("Rule 2 violated. Invalid A after if")
+    return False
 
 
 def valid_statement(tokens: list[Token]) -> bool:
     if len(tokens) == 0:
+        print("Rule 2 violated. Found empty statement!")
         return False
-    elif len(tokens) == 1:
-        return valid_y(tokens[0])
     elif tokens[0] == (TokenType.KEYWORD, "if"):
         return valid_A(tokens[1:])
+    elif len(tokens) == 1:
+        return valid_y(tokens[0])
     else:
         return valid_statement(tokens[:1]) and valid_statement(tokens[1:])
 
@@ -180,7 +193,7 @@ def better_tokenize(source_code: str) -> list[Token]:
 
 
 if __name__ == "__main__":
-    source_code = "+"
+    source_code = "if a if b else if c d"
     tokens = better_tokenize(source_code)
 
     result = checkGrammar(tokens)
@@ -193,6 +206,8 @@ if __name__ == "__main__":
 testcases = {
     "": False,
     "x": True,
+    "+": False,
+    "1 +": False,
     "if x > 5 if y < 10 if z = 3 y": True,
     "if x + 3 * y / 2 > 10 z": True,
     "if": False,
