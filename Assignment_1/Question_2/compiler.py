@@ -166,7 +166,7 @@ def valid_statement(tokens: list[Token]) -> bool:
     elif tokens[0] == (TokenType.KEYWORD, "if"):
         return valid_A(tokens[1:])
     elif len(tokens) == 1:
-        return tokens[0] not in ((TokenType.KEYWORD, "if"), (TokenType.KEYWORD, "else"))
+        return tokens[0][0] not in TokenType.KEYWORD and tokens[0][1] not in operators
     else:
         for i in range(len(tokens)):
             if valid_statement(tokens[:i]) and valid_statement(tokens[i:]):
@@ -178,11 +178,22 @@ def valid_statement(tokens: list[Token]) -> bool:
 def checkGrammar(tokens: list[Token]) -> bool:
     return valid_statement(tokens)
 
-
-# Test the tokenizer
-if __name__ == "__main__":
-    source_code = "if"
+def better_tokenize(source_code: str) -> list[Token]:
     tokens = tokenize(source_code)
+    can_fix = True
+    while (can_fix):
+      for i in range(len(tokens)-1):
+          if tokens[i][0] == TokenType.SYMBOL:
+            if i == 0 or tokens[i-1][0] not in (TokenType.FLOAT, TokenType.IDENTIFIER, TokenType.INTEGER) or tokens[i-1][1] == "print":
+                tokens = tokens[:i] + [(tokens[i+1][0], tokens[i][1] + tokens[i+1][1])] + tokens[i+2:]
+                break
+      else:
+          can_fix = False
+    return tokens
+
+if __name__ == "__main__":
+    source_code = "if 2 + xi > 0 print 2.0 else print -1;"
+    tokens = better_tokenize(source_code)
 
     # for token in tokens:
     #     print(f"Token Type: {token[0]}, Token Value: {token[1]}")
@@ -203,14 +214,22 @@ testcases = {
     "if 2 + xi > 0 print 2.0 else print -1;": True,
     "a b c d e f g": True,
     "print hello test 1 2 3 5 1.02": True,
+    "print -1": True,
+    "print 2.0 else print -1;": False,
     "if x + 3.1 print else if x - 2 test else if x + 3 * 4 < 2 ok": True,
     "if x + 3.1 print else if test else if x + 3 * 4 < 2 ok": False,
     "if x + 3.1 print else if x - 2 test else if x + 3 * 4 < 2": False,
     "if else if x - 2 test else if x + 3 * 4 < 2 ok": False,
+    "if 1 x else x else y": False,
+    "a b c if x y 2 else if x + 3 = 4 print yes": True,
+    "if +": False,
+    "if + print": False,
+    "if 2+print print 5": True,
+    "print if print print else x < y": False,
 }
 
 
 @pytest.mark.parametrize("string, result", [tuple(x) for x in testcases.items()])
 def test_output_match(string: str, result: bool) -> None:
-    tokens = tokenize(string)
+    tokens = better_tokenize(string)
     assert checkGrammar(tokens) == result
