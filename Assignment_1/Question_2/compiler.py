@@ -195,11 +195,18 @@ testcases = {
     "if": False,
     "else": False,
     "if a b": True,
+    "if x print": True,
     "if a if b if c": False,
     "if a if b if c d": True,
     "if a if b else if c d": False,
     "if a if b print else if c d": True,
     "if 2 + xi > 0 print 2.0 else print -1;": True,
+    "a b c d e f g": True,
+    "print hello test 1 2 3 5 1.02": True,
+    "if x + 3.1 print else if x - 2 test else if x + 3 * 4 < 2 ok": True,
+    "if x + 3.1 print else if test else if x + 3 * 4 < 2 ok": False,
+    "if x + 3.1 print else if x - 2 test else if x + 3 * 4 < 2": False,
+    "if else if x - 2 test else if x + 3 * 4 < 2 ok": False,
 }
 
 
