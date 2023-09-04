@@ -124,9 +124,8 @@ def valid_x(tokens: list[Token]) -> bool:
 def valid_cond(tokens: list[Token]) -> bool:
     for op in operators:
         if (TokenType.SYMBOL, op) in tokens:
-            return valid_x(tokens[: tokens.index((TokenType.SYMBOL, op))]) and valid_x(
-                tokens[tokens.index((TokenType.SYMBOL, op)) + 1 :]
-            )
+            idx = tokens.index((TokenType.SYMBOL, op))
+            return valid_x(tokens[:idx]) and valid_x(tokens[idx + 1 :])
     else:
         return len(tokens) == 1 and valid_y(tokens[0])
 
@@ -142,16 +141,17 @@ def valid_A(tokens: list[Token]) -> bool:
                         tokens[j][1] == "else" and valid_statement(tokens[j + 1 :])
                     )
             return False
-    return False
+    else:
+        return False
 
 
 def valid_statement(tokens: list[Token]) -> bool:
     if len(tokens) == 0:
         return False
-    elif tokens[0] == (TokenType.KEYWORD, "if"):
-        return valid_A(tokens[1:])
     elif len(tokens) == 1:
         return valid_y(tokens[0])
+    elif tokens[0] == (TokenType.KEYWORD, "if"):
+        return valid_A(tokens[1:])
     else:
         return valid_statement(tokens[:1]) and valid_statement(tokens[1:])
 
