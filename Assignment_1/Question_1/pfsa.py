@@ -2,11 +2,13 @@ import argparse
 import pytest
 import json
 
+
 def update(string: str, dictionary: dict):
     if string in dictionary:
         dictionary[string] += 1
     else:
         dictionary.update({string: 1})
+
 
 def insert(word: str, res: dict[str, dict[str, int]]) -> None:
     if len(word) == 0:
@@ -39,7 +41,7 @@ def construct(file_str: str) -> dict[str, dict[str, float]]:
 
     for key in res:
         s = sum(res[key].values())
-        res[key] = {k:round(v/s, 2) for k,v in res[key].items()}
+        res[key] = {k: round(v / s, 2) for k, v in res[key].items()}
 
     return res
 
