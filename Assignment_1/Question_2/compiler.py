@@ -132,29 +132,17 @@ def valid_cond(tokens: list[Token]) -> bool:
 
 
 def valid_A(tokens: list[Token]) -> bool:
-    i = 0
     n = len(tokens)
-    i_max = -1
-    while i <= n:
+    for i in range(n, 0, -1):
         if valid_cond(tokens[:i]):
-            i_max = i
-        i += 1
-
-    if i_max == -1:
-        return False
-
-    j = i_max + 1
-    j_max = -1
-    while j <= n:
-        if valid_statement(tokens[i_max:j]):
-            j_max = j
-        j += 1
-    if j_max == n:
-        return True
-    elif j_max == -1 or j_max >= n or tokens[j_max] != (TokenType.KEYWORD, "else"):
-        return False
-
-    return valid_statement(tokens[j_max + 1 :])
+            j = i + 1
+            for j in range(n, 0, -1):
+                if valid_statement(tokens[i:j]):
+                    return j == n or (
+                        tokens[j][1] == "else" and valid_statement(tokens[j + 1 :])
+                    )
+            return False
+    return False
 
 
 def valid_statement(tokens: list[Token]) -> bool:
