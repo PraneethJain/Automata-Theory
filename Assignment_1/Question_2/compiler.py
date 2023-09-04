@@ -15,6 +15,7 @@ operators = {"+", "-", "*", "/", "^", "<", ">", "="}
 token_hierarchy = {
     "if": TokenType.KEYWORD,
     "else": TokenType.KEYWORD,
+    "print": TokenType.KEYWORD,
 }
 
 
@@ -109,13 +110,13 @@ def tokenize(source_code: str):
     return tokens
 
 
+def valid_y(token: Token) -> bool:
+    return token[1] not in operators.union({"if", "else"})
+
+
 def valid_x(tokens: list[Token]) -> bool:
     if len(tokens) == 1:
-        return tokens[0][0] in (
-            TokenType.FLOAT,
-            TokenType.INTEGER,
-            TokenType.IDENTIFIER,
-        )
+        return valid_y(tokens[0])
     else:
         return valid_cond(tokens)
 
@@ -127,11 +128,7 @@ def valid_cond(tokens: list[Token]) -> bool:
                 tokens[tokens.index((TokenType.SYMBOL, op)) + 1 :]
             )
     else:
-        return len(tokens) == 1 and tokens[0][0] in (
-            TokenType.FLOAT,
-            TokenType.INTEGER,
-            TokenType.IDENTIFIER,
-        )
+        return len(tokens) == 1 and valid_y(tokens[0])
 
 
 def valid_A(tokens: list[Token]) -> bool:
@@ -166,7 +163,7 @@ def valid_statement(tokens: list[Token]) -> bool:
     elif tokens[0] == (TokenType.KEYWORD, "if"):
         return valid_A(tokens[1:])
     elif len(tokens) == 1:
-        return tokens[0][0] not in TokenType.KEYWORD and tokens[0][1] not in operators
+        return valid_y(tokens[0])
     else:
         for i in range(len(tokens)):
             if valid_statement(tokens[:i]) and valid_statement(tokens[i:]):
@@ -178,21 +175,27 @@ def valid_statement(tokens: list[Token]) -> bool:
 def checkGrammar(tokens: list[Token]) -> bool:
     return valid_statement(tokens)
 
+
 def better_tokenize(source_code: str) -> list[Token]:
     tokens = tokenize(source_code)
     can_fix = True
-    while (can_fix):
-      for i in range(len(tokens)-1):
-          if tokens[i][0] == TokenType.SYMBOL:
-            if i == 0 or tokens[i-1][0] not in (TokenType.FLOAT, TokenType.IDENTIFIER, TokenType.INTEGER) or tokens[i-1][1] == "print":
-                tokens = tokens[:i] + [(tokens[i+1][0], tokens[i][1] + tokens[i+1][1])] + tokens[i+2:]
-                break
-      else:
-          can_fix = False
+    while can_fix:
+        for i in range(len(tokens) - 1):
+            if tokens[i][1] == "-":
+                if i == 0 or tokens[i - 1][0] == TokenType.KEYWORD:
+                    tokens = (
+                        tokens[:i]
+                        + [(tokens[i + 1][0], tokens[i][1] + tokens[i + 1][1])]
+                        + tokens[i + 2 :]
+                    )
+                    break
+        else:
+            can_fix = False
     return tokens
 
+
 if __name__ == "__main__":
-    source_code = "if 2 + xi > 0 print 2.0 else print -1;"
+    source_code = "if 2+print print 5"
     tokens = better_tokenize(source_code)
 
     # for token in tokens:
@@ -215,6 +218,7 @@ testcases = {
     "a b c d e f g": True,
     "print hello test 1 2 3 5 1.02": True,
     "print -1": True,
+    "print -1;": True,
     "print 2.0 else print -1;": False,
     "if x + 3.1 print else if x - 2 test else if x + 3 * 4 < 2 ok": True,
     "if x + 3.1 print else if test else if x + 3 * 4 < 2 ok": False,
