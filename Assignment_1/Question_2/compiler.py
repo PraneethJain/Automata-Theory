@@ -165,11 +165,7 @@ def valid_statement(tokens: list[Token]) -> bool:
     elif len(tokens) == 1:
         return valid_y(tokens[0])
     else:
-        for i in range(len(tokens)):
-            if valid_statement(tokens[:i]) and valid_statement(tokens[i:]):
-                return True
-        else:
-            return False
+        return valid_statement(tokens[:1]) and valid_statement(tokens[1:])
 
 
 def checkGrammar(tokens: list[Token]) -> bool:
@@ -196,17 +192,21 @@ def better_tokenize(source_code: str) -> list[Token]:
 
 
 if __name__ == "__main__":
-    source_code = "if 1 ++ 2 > 0 then"
+    source_code = "+"
     tokens = better_tokenize(source_code)
 
-    # for token in tokens:
-    #     print(f"Token Type: {token[0]}, Token Value: {token[1]}")
-
     result = checkGrammar(tokens)
-    print(result)
+
+    # if result:
+    #     for token in tokens:
+    #         print(f"Token Type: {token[0]}, Token Value: {token[1]}")
 
 
 testcases = {
+    "": False,
+    "x": True,
+    "if x > 5 if y < 10 if z = 3 y": True,
+    "if x + 3 * y / 2 > 10 z": True,
     "if": False,
     "else": False,
     "if a b": True,
