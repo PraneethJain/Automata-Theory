@@ -128,7 +128,9 @@ def valid_cond(tokens: list[Token], to_print: bool = True) -> bool:
     for op in operators:
         if (TokenType.SYMBOL, op) in tokens:
             idx = tokens.index((TokenType.SYMBOL, op))
-            return valid_x(tokens[:idx], to_print) and valid_x(tokens[idx + 1 :], to_print)
+            return valid_x(tokens[:idx], to_print) and valid_x(
+                tokens[idx + 1 :], to_print
+            )
     else:
         if len(tokens) != 1:
             to_print and print("Rule 3 violated. Found y with multiple tokens!")
@@ -148,7 +150,9 @@ def valid_A(tokens: list[Token], to_print: bool = True) -> bool:
                         return True
 
                     if tokens[j][1] != "else":
-                        to_print and print(f"Rule 4 violated. Expected 'else', found {tokens[j][1]}")
+                        to_print and print(
+                            f"Rule 4 violated. Expected 'else', found {tokens[j][1]}"
+                        )
                         return False
                     return valid_statement(tokens[j + 1 :], to_print)
             to_print and print("Rule 4 violated. Invalid statement after condition")
@@ -166,7 +170,9 @@ def valid_statement(tokens: list[Token], to_print: bool = True) -> bool:
     elif len(tokens) == 1:
         return valid_y(tokens[0], to_print)
     else:
-        return valid_statement(tokens[:1], to_print) and valid_statement(tokens[1:], to_print)
+        return valid_statement(tokens[:1], to_print) and valid_statement(
+            tokens[1:], to_print
+        )
 
 
 def checkGrammar(tokens: list[Token], to_print: bool = True) -> bool:
@@ -193,7 +199,7 @@ def better_tokenize(source_code: str) -> list[Token]:
 
 
 if __name__ == "__main__":
-    source_code = "if 1 + 2 > 0 then"
+    source_code = input()
     tokens = better_tokenize(source_code)
 
     valid = checkGrammar(tokens)
