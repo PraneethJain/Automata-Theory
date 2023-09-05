@@ -184,9 +184,9 @@ def better_tokenize(source_code: str) -> list[Token]:
     can_fix = True
     while can_fix:
         for i in range(len(tokens) - 1):
-            if tokens[i][1] in {"-", "+"} and (
-                i == 0 or tokens[i - 1][0] in {TokenType.KEYWORD}
-            ):
+            if tokens[i][1] == '-' and (
+                i == 0 or tokens[i - 1][0] in {TokenType.KEYWORD, TokenType.SYMBOL}
+            ) and tokens[i+1][0] in {TokenType.INTEGER, TokenType.FLOAT}:
                 tokens = (
                     tokens[:i]
                     + [(tokens[i + 1][0], tokens[i][1] + tokens[i + 1][1])]
@@ -214,6 +214,8 @@ testcases = {
     "x": True,
     "+": False,
     "1 +": False,
+    "+ 1": False,
+    "- 1": True,
     "if x > 5 if y < 10 if z = 3 y": True,
     "if x + 3 * y / 2 > 10 z": True,
     "if": False,
@@ -243,6 +245,7 @@ testcases = {
     "1 + 2": False,
     "if 1 + 2 > 0 then": True,
     "if 1 ++ 2 > 0 then": False,
+    "if 3 + -1 then": True,
 }
 
 
