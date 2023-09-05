@@ -13,6 +13,8 @@ The boilerplate tokenizer tokenizes it into `["print", "-", "1"]`
 
 My tokenizer tokenizes it into `["print", "-1"]`
 
+This makes statements like `-1` valid. `+1` is still invalid, I have only considered negative numbers prefixed with `-`. For positive, just enter the value without sign.
+
 > Note that cases like `x - 1` are still tokenized as `["x", "-", "1"]`
 
 ### Error Messages
