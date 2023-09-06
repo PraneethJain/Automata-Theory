@@ -143,8 +143,7 @@ def valid_A(tokens: list[Token], to_print: bool = True) -> bool:
     n = len(tokens)
     for i in range(n, 0, -1):
         if valid_cond(tokens[:i], False):
-            j = i + 1
-            for j in range(n, 0, -1):
+            for j in range(n, i, -1):
                 if valid_statement(tokens[i:j], False):
                     if j == n:
                         return True
