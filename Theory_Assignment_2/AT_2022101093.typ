@@ -113,3 +113,34 @@ In all possible cases, pumping lemma does not hold. This is a contradiction.
 $therefore L$ is not a context free language.
 
 $Q E D$
+
+== (c)
+#underline[Given]: $L = {a^(n!) | n >= 0}$
+
+#underline[To Prove]: $L$ is not a context-free language
+
+#underline[Proof]: Assume L is a context-free language.
+
+$therefore$ L satisfies the pumping lemma for context-free languages. Let $p$ be its pumping length.
+
+Consider the string $s = a^(p!)$. $|s| = p! >= p$, $therefore s = u v x y z$
+
+On pumping the string, we get $s_i = u v^i x y^i z$
+
+Clearly, $|s_i| = p! + (i-1)|v y|$ (Note that $|v y| > 0$ according to pumping lemma).
+
+$forall i >= 0 space s_i in L$
+
+$forall i >= 0 |s_i|$ is a factorial
+
+$forall i >= 0 space p! + (i - 1)|v y|$ is a factorial
+
+This implies that there exists an arithmetic progression of factorials with common difference $|v y|$. 
+
+Since $Gamma$ (The gamma function) is convex for positive inputs, no infinite sequence with linear slope can fit it. So, there can exist no arithmetic progression of factorials with non zero common difference,
+
+This is a contradiction. $L$ does not satisfy the pumping lemma.
+
+$therefore$ L is not a context free language.
+
+$Q E D$
