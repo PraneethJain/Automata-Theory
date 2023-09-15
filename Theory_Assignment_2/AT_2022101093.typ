@@ -137,10 +137,59 @@ $forall i >= 0 space p! + (i - 1)|v y|$ is a factorial
 
 This implies that there exists an arithmetic progression of factorials with common difference $|v y|$. 
 
-Since $Gamma$ (The gamma function) is convex for positive inputs, no infinite sequence with linear slope can fit it. So, there can exist no arithmetic progression of factorials with non zero common difference,
+Since $Gamma$ (The gamma function) is convex for positive inputs, no infinite sequence with linear non zero slope can fit it. So, there can exist no infinite arithmetic progression of factorials with non zero common difference,
 
 This is a contradiction. $L$ does not satisfy the pumping lemma.
 
 $therefore$ L is not a context free language.
 
 $Q E D$
+
+== Question 2
+#underline[Given]: $F(a, b)= a_0 b_0 a_1 b_1 ... a_n b_n$
+
+Yes, recursively enumerable languages are closed under this operation.
+
+#underline[To Prove]: RE languages are closed under F
+
+#underline[Proof]: Consider two arbitrary RE languages $L_1$ and $L_2$. 
+
+Let the turing machines that recognize them be $M_1$ and $M_2$ respectively.
+
+Let $L = {F(a,b) | a in L_1, b in L_2}$
+
+Now, we construct a turing machine $M$ that recognizes $L$.
+
+Let this turing machine have three tapes, with the original input on the first tape.
+Note that multi-tape turing machines are equivalent to regular turing machines.
+
+$M$ = " On input string $w$:
+  1. Copy over the even indices of tape 1 onto tape 2.
+  2. Copy over the odd indices of tape 1 onto tape 3.
+  3. Simulate $M_1$ on tape 2. If rejected, reject $w$. 
+  4. Simulate $M_2$ on tape 3. If rejected, reject $w$.
+  5. Accept $w$.
+"
+
+Consider any string $c in L$.
+
+$c = a_0 b_0 a_1 b_1 ... a_n b_n$
+where $a$ is accepted by $M_1$ and $b$ is accepted by $M_2$.
+
+$M$ copies over $a$ onto tape 2 and $b$ onto tape 3. These are accepted, so $c$ is accepted. 
+
+$therefore$ Every string in $L$ is accepted by $M$.
+
+Now consider any string $c in.not L$.
+
+After steps 1 and 2, since $c in.not L$, either $a$ is not accepted by $M_1$ or $b$ is not accepted by $M_2$. In either case, $c$ is not accepted. 
+
+$therefore$ Every string not in $L$ is not accepted by $M$.
+
+Hence, $M$ recognizes $L$. So, $L$ is a recursively enumerable language. 
+
+$therefore$ Recursively enumerable languages are closed under $F$.
+
+$Q E D$
+
+== Question 3
