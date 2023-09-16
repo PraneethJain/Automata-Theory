@@ -221,3 +221,34 @@ $M$ = " On input string $w$:
 We go the end of the string. Then, we move left, find a character, mark it as read (by writing a 2) and then copy it over to the rightmost end. We do this until nothing is left to be read, then replace all 2's with blanks.
 
 #image("ReverseMachine.png")
+
+== Question 5
+#underline[Given]: S is the set of all *finite* binary strings, L is the set of all languages.
+
+#underline[To Prove]: S is countably infinite. L is uncountably infinite.
+
+#underline[Proof]: 
+
+Construct a set $S'$ such that
+$ S' = {1w | w in S} $
+i.e, prepend a 1 to all the strings in $S$. Note that the cardinality of $S$ and $S'$ is equal.
+
+Clearly, every string in $S'$ does not contain any leading zeroes. Now, we will show a bijection between $S'$ and $NN$.
+
+Consider any string $s in S'$. It has an equivalent decimal representation in $NN$. Therefore, there exists an injection from $S'$ to $NN$.
+
+Consider any $n in NN'$. Since $S$ contains all finite binary strings, it also contains the the binary string representing $n$ without the leading $1$. $therefore$ $S'$ contains the binary string representing $n$. Therefore, there exists an injection from $N$ to $S'$.
+
+Since there exists an injection from $S'$ to $NN$ and from $NN$ to $S'$, there exists a bijection between $S'$ and $NN$. Hence, $S'$ is countably infinite.
+
+Since $S$ and $S'$ have the same cardinality, $S$ is also countably infinite.
+
+Let $P(S)$ denote the power set of S. Every element in the power set of S is a language.
+
+$ forall l in P(S) space l in L $
+
+$therefore$ The cardinality of L is atleast that of the power set of the natural numbers, which is uncountably infinite according to cantor's theorem.
+
+$therefore L$ is uncountable infinite.
+
+$Q E D$
