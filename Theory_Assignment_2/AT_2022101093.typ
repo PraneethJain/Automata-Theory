@@ -160,36 +160,64 @@ Let $L = {F(a,b) | a in L_1, b in L_2}$
 
 Now, we construct a turing machine $M$ that recognizes $L$.
 
-Let this turing machine have three tapes, with the original input on the first tape.
-Note that multi-tape turing machines are equivalent to regular turing machines.
+Let this turing machine have five tapes, with the original input on the first tape.
+Note that multi-tape turing machines are equivalent to regular turing machines as they can be concatenated with a special delimiter, and multiple virtual heads can be used to simulate them on a single tape.
 
 $M$ = " On input string $w$:
-  1. Copy over the even indices of tape 1 onto tape 2.
-  2. Copy over the odd indices of tape 1 onto tape 3.
-  3. Simulate $M_1$ on tape 2. If rejected, reject $w$. 
-  4. Simulate $M_2$ on tape 3. If rejected, reject $w$.
-  5. Accept $w$.
+  1. Measure the length of $w$ and store it in it's state (Let the length be $p$).
+  2. Loop over $i$ from $0$ to $p$, both inclusive.
+  3. Copy over characters at even indices upto $i$ (inclusive) to tape 2 and tape 4.
+  4. Copy over characters at odd indices upto $i$ (inclusive) to tape 3 and tape 5.
+  5. Copy the remaining characters to the end of tape 4 as well as tape 5.
+  7. Perform steps 8 and 9 in BFS order. (One transition in each, then next iteration)
+  8. Simulate $M_1$ on tape 2 and $M_2$ on tape 5. If both accept, then accept $w$. 
+  9. Simulate $M_1$ on tape 4 and $M_2$ on tape 3. If both accept, then accept $w$.
+  10. After done looping, Reject $w$.
 "
 
-Consider any string $c in L$.
-
-$c = a_0 b_0 a_1 b_1 ... a_n b_n$
-where $a$ is accepted by $M_1$ and $b$ is accepted by $M_2$.
-
-$M$ copies over $a$ onto tape 2 and $b$ onto tape 3. These are accepted, so $c$ is accepted. 
-
-$therefore$ Every string in $L$ is accepted by $M$.
-
-Now consider any string $c in.not L$.
-
-After steps 1 and 2, since $c in.not L$, either $a$ is not accepted by $M_1$ or $b$ is not accepted by $M_2$. In either case, $c$ is not accepted. 
-
-$therefore$ Every string not in $L$ is not accepted by $M$.
-
-Hence, $M$ recognizes $L$. So, $L$ is a recursively enumerable language. 
-
-$therefore$ Recursively enumerable languages are closed under $F$.
+The idea is to split the string into two parts, delimiting at the index $i$. The part to the left is the interleaved part, and it is copied over to its respective tapes based on parity. The part to the right is the remaining part, which is appended to both the strings in 4 and 5. Now, both the combinations are checked (length of $b$ greater than equal to $a$ or length of $a$ greater than $b$). If either of these cases is accepted, then the string is accepted. Therefore, $forall c in L$, $M$ accepts c. For any string not in L, it will either be rejected or not halt in $M_1$ or $M_2$.
 
 $Q E D$
 
 == Question 3
+=== No restrictions
+The computational power of a PDA that has a binary tree instead of the stack and allowing all four operations is equal to that of a turing machine. To prove this equivalence, we can model a binary tree as an array (assume 1-indexed)
+
+For node present at index n:
+
+$"left child" -> 2n, "right child" -> 2n+1, "parent" -> floor(n/2)$
+
+Since the PDA can go to any child and parent node, it has access to the entire tree. $therefore$ Given an index $i$, the PDA can traverse to $i-1$ and $i+1$, thus simulating the left and right operations of a standard turing machine. 
+
+
+The read and write operations and the states of the PDA are same as that of the turing machine.
+
+With this, we have simulated all the operations of a standard turing machines in a PDA with a binary tree. Therefore, such a PDA is as powerful as a turing machine.
+
+=== Cannot traverse back to parent
+
+
+= TO DO
+In this case
+
+
+== Question 4
+#underline[Given]: Binary string $w in {0, 1}^n$ 
+
+#underline[To construct]: Turing machine that halts with $w^R$ on its tape.
+
+#underline[Construction]: 
+
+$M$ = " On input string $w$: 
+  1. Traverse to the end of the string.
+  2. Start moving left until you encounter a 0 or 1. If none found, go to step 6.
+  3. Replace the symbol with a new symbol (say 2)
+  4. Start moving right until you encounter the first blank, and replace it with the respective 0 or 1.
+  5. Go back to step 2.
+  6. Start moving right until you find a 0 or 1. Replace every 2 with blank.
+  7. On reading a 0 or 1, halt.
+"
+
+We go the end of the string. Then, we move left, find a character, mark it as read (by writing a 2) and then copy it over to the rightmost end. We do this until nothing is left to be read, then replace all 2's with blanks.
+
+#image("ReverseMachine.png")
