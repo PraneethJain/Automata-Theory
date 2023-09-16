@@ -286,3 +286,51 @@ $therefore M^*$ recognizes $L^*$. $L^*$ is a recursively enumerable language.
 $therefore$ Recursively Enumerable Languages are closed under the star operation.
 
 $Q E D$
+
+== Question 7
+#underline[Given]: Lilliputian Turing Machine (LTM) with transition function $ delta : {Q times Gamma^k} -> {Q times Gamma^k times ZZ_0^+} $
+$ delta(q_i, (a_1, a_2, a_3, ...a_k)) = (q_j, (b_1, b_2, ... b_k), r) $
+
+#underline[To Prove]: The Lilliputian Turing Machine is as powerful  as a standard Turing Machine in terms of the languages it can recognize.
+
+#underline[Proof]:
+
+First, we will simulate a standard TM using an LTM.
+
+
+Consider a general transition in a standard TM:
+$ delta(q_i, a) = (q_j, b, L "or" R) $
+
+1. We can modify the states so as to keep track of the current address of the head on the tape $r$. To do this, we can duplicate all the states for each address, and thus obtain the address from the state itself. If the original states were $Q = {q_1, q_2, q_3, ...}$, we create the new set of states as $Q' = {q_11, q_12, q_13, ..., q_21, q_22, q_23, ..., q_(i r), ...}$ where $q_(i r)$ represents the transition $q_i$ of the original TM at address $r$ 
+2. If the turing machine moves left ($L$) while at index $r$
+$ delta(q_(i r), (a)) = (q_(j (r-1)), b, r-1) $
+3. If the turing machine moves right ($R$) while at index $r$
+$ delta(q_(i r), (a)) = (q_(j (r+1)), b, r+1) $
+
+Hence, a standard TM can be simulated by an LTM.
+
+Now, we will simulate an LTM using a standard TM. Since a standard turing machine is equivalent two a turing machine with $k$ tapes, as we can simply add a delimeter at the end of the first tape and then concatenate the following tape onto it (delimiter separated) and maintain $k$ virtual heads, we will use a $k$ tape turing machine to simulate the LTM.
+
+
+Consider a general transition in an LTM
+$ delta(q_i, (a_1, a_2, a_3, ... a_k)) = (q_j, (b_1, b_2, ... b_k), r) $
+
+1. Copy the characters at the next k indices (including the current one from the head) onto tape 2.
+2. Start from the first index of tape 2. Iterate through this tape from left to right and check if character at index $i$ matches $a_i$. If does not match, halt. If all are matched, stop at the blank at the end of the tape.
+3. Now, in tape 1, if head of tape 2 is not on a blank, do nothing.
+
+4. If head of tape 2 is on a blank, then perform the following transitions
+
+  $ delta(q_i^', a_j) = (q_j^', b_j, R) space space forall j in {1, 2, 3, ... k} $
+
+  Now, we need to simulate the movement to address r. Perform the following transitions until the current address is r.
+  $ delta(q_i^', x) = (q_j^', x, R "or" L) space space forall x in Gamma $
+  We decide R or L based on if the current address is greater than or lower than $r$. If address is lower, choose R, and if it is higher, choose L.
+
+Note that we can store the current address in a third tape and increment and decrement it accordingly using a third virtual head. This tape can be used to read the current address for comparisons with $r$.
+
+Hence, an LTM can be simulated by a k-tape turing machine, which is equivalent to a standard turing machine. $therefore$ An LTM can be simulated by a standard turing machine.
+
+Since an LTM can be simulated by a standard TM and a standard TM can be simulated by an LTM, these are equivalent to each other. Hence, the Lilliputian Turing Machine is as powerful as a standard Turing Machine in terms of the languages it can recognize.
+
+$Q E D$
