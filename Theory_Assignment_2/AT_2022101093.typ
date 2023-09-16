@@ -252,3 +252,37 @@ $therefore$ The cardinality of L is atleast that of the power set of the natural
 $therefore L$ is uncountable infinite.
 
 $Q E D$
+
+== Question 6
+#underline[To Prove]: Recursively Enumerable Languages are closed under the star operation.
+
+#underline[Proof]: Let $L$ be an arbitrary RE language.
+
+$L^* = L^0 union L^1 union L^2 union L^3 ... space space space$ ($L^0 = {epsilon}$)
+
+$L^* = union_(i=0)^infinity L^i$
+
+
+Since $L$ is recursively enumerable, $exists$ a turing machine $M$ that recognizes $L$.
+
+To show that $L^*$ is also recursively enumerable, we construct a turing machine $M^*$ that recognizes $L^*$. This machine will partition the input string into all possible partitions. Then, for each partition, we will simulate $M$ on all substrings of the partition. If for any partition, all the substrings are accepted by $M$, then the input string will be accepted by $M$. Otherwise, the string will be rejected.
+
+$M^*$ = "On input string $w$: 
+  1. if $w$ is $epsilon$, accept $w$.
+  2. Generate next partition of $w$. If none left, reject $w$.
+  3. Let the current partition be $w_1, w_2, ... w_k$.
+  4. Simualte $M$ on $w_i forall i$. If $M$ accepts all, then accept $w$.
+  5. Otherwise, go to step 2.
+"
+
+Now, we prove the correctness of this turing machine.
+
+Consider any string $s in L^*$. s is a concatenation of substrings of L. $therefore$ it will be partitioned into those substrings in step 2, and each of these will be accepted in step 4, hence resulting in $s$ being accepted.
+
+Consider any string $s in.not L^*$. s is not a concatention of substrings of L. $therefore$ there exists no partition for which all substrings will be accepted in step 4. So, after looping through all partitions, $s$ will be either be rejected or not halt.
+
+$therefore M^*$ recognizes $L^*$. $L^*$ is a recursively enumerable language.
+
+$therefore$ Recursively Enumerable Languages are closed under the star operation.
+
+$Q E D$
