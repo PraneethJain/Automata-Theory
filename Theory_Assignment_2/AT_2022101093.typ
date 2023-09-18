@@ -185,21 +185,22 @@ The computational power of a PDA that has a binary tree instead of the stack and
 
 For node present at index n:
 
-$"left child" -> 2n, "right child" -> 2n+1, "parent" -> floor(n/2)$
+$ "left child" -> 2n, "right child" -> 2n+1, "parent" -> floor(n/2) $
 
 Since the PDA can go to any child and parent node, it has access to the entire tree. $therefore$ Given an index $i$, the PDA can traverse to $i-1$ and $i+1$, thus simulating the left and right operations of a standard turing machine. 
 
 
 The read and write operations and the states of the PDA are same as that of the turing machine.
 
-With this, we have simulated all the operations of a standard turing machines in a PDA with a binary tree. Therefore, such a PDA is as powerful as a turing machine.
+With this, we have simulated all the operations of a standard turing machine in a PDA with a binary tree. Therefore, such a PDA is as powerful as a turing machine.
 
 === Cannot traverse back to parent
 
+In this case, since we cannot traverse back to the parent, traversing to the left index and right index of the array representation of the binary tree is not possible.
 
-= TO DO
-In this case
+To perform a general operation of a turing machine using this restricted PDA with a binary tree, we can copy over the entire conents of the tree (as an array) while marking the head virtually with a special symbol (say with a $x^o$ where $x$ is the value at that position). This is possible because we can directly read the character at any node of the binary trie (i.e, at any index of the array). In case of the write operation, the PDA will copy over the modified value instead of copying the original value and then modifying it, because modifying after copying may require traversing to the parent. 
 
+As we have simulated all the operations of a standard turing machine in this restricted PDA, such a PDA is as powerful as a turing machine.g
 
 == Question 4
 #underline[Given]: Binary string $w in {0, 1}^n$ 
