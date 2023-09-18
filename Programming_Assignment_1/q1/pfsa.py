@@ -41,7 +41,7 @@ def construct(file_str: str) -> dict[str, dict[str, float]]:
 
     for key in res:
         s = sum(res[key].values())
-        res[key] = {k: round(v / s, 2) for k, v in res[key].items()}
+        res[key] = {k: v / s for k, v in res[key].items()}
 
     return res
 
