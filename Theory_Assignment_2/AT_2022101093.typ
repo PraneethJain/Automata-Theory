@@ -288,6 +288,7 @@ To show that $L^*$ is also recursively enumerable, we construct a turing machine
 
 $M^*$ = "On input string $w$: 
   1. if $w$ is $epsilon$, accept $w$.
+  (Simulate each partition via dovetailing)
   2. Generate next partition of $w$. If none left, reject $w$.
   3. Let the current partition be $w_1, w_2, ... w_k$.
   4. Simualte $M$ on $w_i forall i$. If $M$ accepts all, then accept $w$.
@@ -320,11 +321,10 @@ First, we will simulate a standard TM using an LTM.
 Consider a general transition in a standard TM:
 $ delta(q_i, a) = (q_j, b, L "or" R) $
 
-1. We can modify the states so as to keep track of the current address of the head on the tape $r$. To do this, we can duplicate all the states for each address, and thus obtain the address from the state itself. If the original states were $Q = {q_1, q_2, q_3, ...}$, we create the new set of states as $Q' = {q_11, q_12, q_13, ..., q_21, q_22, q_23, ..., q_(i r), ...}$ where $q_(i r)$ represents the transition $q_i$ of the original TM at address $r$ 
-2. If the turing machine moves left ($L$) while at index $r$
-$ delta(q_(i r), (a)) = (q_(j (r-1)), b, r-1) $
-3. If the turing machine moves right ($R$) while at index $r$
-$ delta(q_(i r), (a)) = (q_(j (r+1)), b, r+1) $
+1. If the turing machine moves left ($L$) 
+$ delta(q_i, (a)) = (q_j, (b), -1) $
+2. If the turing machine moves right ($R$)
+$ delta(q_i, (a)) = (q_j, (b), +1) $
 
 Hence, a standard TM can be simulated by an LTM.
 
@@ -342,11 +342,22 @@ $ delta(q_i, (a_1, a_2, a_3, ... a_k)) = (q_j, (b_1, b_2, ... b_k), r) $
 
   $ delta(q_i^', a_j) = (q_j^', b_j, R) space space forall j in {1, 2, 3, ... k} $
 
-  Now, we need to simulate the movement to address r. Perform the following transitions until the current address is r.
-  $ delta(q_i^', x) = (q_j^', x, R "or" L) space space forall x in Gamma $
-  We decide R or L based on if the current address is greater than or lower than $r$. If address is lower, choose R, and if it is higher, choose L.
+  Now we move the head back to where it was by performing the following transition
 
-Note that we can store the current address in a third tape and increment and decrement it accordingly using a third virtual head. This tape can be used to read the current address for comparisons with $r$.
+  $ delta(q_i^', x) = (q_j^', x, R) $
+
+  $k$ times.
+
+5.  Now, we need to simulate the movement to address $p + r$.
+  
+  If $r$ is positive, perform the below operation $r$ times
+  $ delta(q_i^', x) = (q_j^', x, R) space space forall x in Gamma $
+
+  If $r$ is negative, perform the below operation $r$ times
+  $ delta(q_i^', x) = (q_j^', x, L) space space forall x in Gamma $
+
+  If $r$ is zero, do nothing.
+
 
 Hence, an LTM can be simulated by a k-tape turing machine, which is equivalent to a standard turing machine. $therefore$ An LTM can be simulated by a standard turing machine.
 
