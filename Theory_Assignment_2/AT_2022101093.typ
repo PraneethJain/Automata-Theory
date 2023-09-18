@@ -152,16 +152,34 @@ Yes, recursively enumerable languages are closed under this operation.
 
 #underline[To Prove]: RE languages are closed under F
 
-#underline[Proof]: Consider two arbitrary RE languages $L_1$ and $L_2$. 
+#underline[Proof]: 
+
+Assume that the tape is 0 indexed.
+
+Consider two arbitrary RE languages $L_1$ and $L_2$. 
 
 Let the turing machines that recognize them be $M_1$ and $M_2$ respectively.
 
 Let $L = {F(a,b) | a in L_1, b in L_2}$
 
 Now, we construct a turing machine $M$ that recognizes $L$.
+Note that multi-tape turing machines are equivalent to regular turing machines as they can be concatenated with a special delimiter, and multiple virtual heads can be used to simulate them on a single tape.
+
+=== Assuming strings are of equal length
+Let this turing machine have 3 times, with the original input on the first tape.
+
+$M$ = " On input string $w$:
+  1. Copy over even indices of $w$ onto tape 2 until a blank is read.
+  2. Copy over odd indices of $w$ onto tape 3 until a blank is read.
+  3. Run $M_1$ on tape 2 and $M_2$ on tape 3.
+  4. If both accept, then accept $w$.
+  5. Otherwise, reject $w$.
+"
+
+=== Assuming otherwise
 
 Let this turing machine have five tapes, with the original input on the first tape.
-Note that multi-tape turing machines are equivalent to regular turing machines as they can be concatenated with a special delimiter, and multiple virtual heads can be used to simulate them on a single tape.
+
 
 $M$ = " On input string $w$:
   1. Measure the length of $w$ and store it in it's state (Let the length be $p$).
