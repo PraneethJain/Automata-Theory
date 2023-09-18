@@ -200,7 +200,7 @@ In this case, since we cannot traverse back to the parent, traversing to the lef
 
 To perform a general operation of a turing machine using this restricted PDA with a binary tree, we can copy over the entire conents of the tree (as an array) while marking the head virtually with a special symbol (say with a $x^o$ where $x$ is the value at that position). This is possible because we can directly read the character at any node of the binary trie (i.e, at any index of the array). In case of the write operation, the PDA will copy over the modified value instead of copying the original value and then modifying it, because modifying after copying may require traversing to the parent. 
 
-As we have simulated all the operations of a standard turing machine in this restricted PDA, such a PDA is as powerful as a turing machine.g
+As we have simulated all the operations of a standard turing machine in this restricted PDA, such a PDA is as powerful as a turing machine.
 
 == Question 4
 #underline[Given]: Binary string $w in {0, 1}^n$ 
