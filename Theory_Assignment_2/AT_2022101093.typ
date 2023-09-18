@@ -165,7 +165,7 @@ Note that multi-tape turing machines are equivalent to regular turing machines a
 
 $M$ = " On input string $w$:
   1. Measure the length of $w$ and store it in it's state (Let the length be $p$).
-  2. Loop over $i$ from $0$ to $p$, both inclusive.
+  2. Loop over $i$ from $0$ to $p$, both inclusive. Increment $i$ by 2 each time.
   3. Copy over characters at even indices upto $i$ (inclusive) to tape 2 and tape 4.
   4. Copy over characters at odd indices upto $i$ (inclusive) to tape 3 and tape 5.
   5. Copy the remaining characters to the end of tape 4 as well as tape 5.
